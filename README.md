@@ -22,7 +22,7 @@
 Быстрая установка одной командой:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_REPO/main/scripts/quick_install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/AliakseiZiurkalau/rag-agent/main/scripts/quick_install.sh | bash
 ```
 
 ### Для других систем
@@ -221,7 +221,7 @@ make test-web     # Открыть веб-интерфейс
 ./scripts/check_system.sh
 
 # Быстрая установка одной командой
-curl -fsSL https://raw.githubusercontent.com/YOUR_REPO/main/scripts/quick_install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/AliakseiZiurkalau/rag-agent/main/scripts/quick_install.sh | bash
 
 # Перенос проекта с локального компьютера
 ./scripts/transfer_to_pi.sh pi@raspberrypi.local

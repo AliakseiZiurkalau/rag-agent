@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Быстрая установка RAG Agent на Raspberry Pi
-# Использование: curl -fsSL https://raw.githubusercontent.com/YOUR_REPO/main/scripts/quick_install.sh | bash
+# Использование: curl -fsSL https://raw.githubusercontent.com/AliakseiZiurkalau/rag-agent/main/scripts/quick_install.sh | bash
 
 set -e
 

@@ -6,7 +6,7 @@
 
 ```bash
 # На Raspberry Pi выполните:
-curl -fsSL https://raw.githubusercontent.com/YOUR_REPO/main/scripts/quick_install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/AliakseiZiurkalau/rag-agent/main/scripts/quick_install.sh | bash
 
 # Перезайдите в систему
 exit
@@ -56,7 +56,7 @@ make install
 
 ```bash
 # 1. Клонируйте проект
-git clone <YOUR_REPO_URL>
+git clone https://github.com/AliakseiZiurkalau/rag-agent.git
 cd rag-agent
 
 # 2. Настройте окружение
