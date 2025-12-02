@@ -1,0 +1,25 @@
+# Core dependencies
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+python-multipart==0.0.6
+
+# LLM and RAG
+langchain==0.1.0
+langchain-community==0.0.10
+ollama==0.1.6
+
+# Vector store
+chromadb==0.4.18
+
+# Embeddings
+sentence-transformers==2.2.2
+
+# Document parsing
+PyPDF2==3.0.1
+python-docx==1.1.0
+unstructured==0.11.0
+
+# Utilities
+python-dotenv==1.0.0
+aiofiles==23.2.1

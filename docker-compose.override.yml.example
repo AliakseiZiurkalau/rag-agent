@@ -1,0 +1,30 @@
+# Пример override файла для локальной разработки
+# Скопируйте в docker-compose.override.yml и настройте под себя
+
+version: '3.8'
+
+services:
+  rag-agent:
+    # Для разработки с hot-reload
+    volumes:
+      - ./src:/app/src
+      - ./api:/app/api
+      - ./config.py:/app/config.py
+    environment:
+      - LOG_LEVEL=DEBUG
+    command: uvicorn api.server:app --host 0.0.0.0 --port 8000 --reload
+
+  ollama:
+    # Для GPU поддержки (если доступно)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    
+    # Альтернативная модель
+    # environment:
+    #   - OLLAMA_MODEL=phi3:mini
+    pass

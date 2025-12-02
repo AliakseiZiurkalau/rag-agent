@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Agent - AI Ассистент</title>
+    <meta name="description" content="Локальный AI-ассистент на базе документов с использованием RAG">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 RAG Agent</h1>
+            <p class="subtitle">AI-ассистент на базе локальных документов</p>
+            <div class="status-bar">
+                <span id="status" class="status">●</span>
+                <span id="status-text">Проверка соединения...</span>
+                <span class="stats" id="stats"></span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Панель загрузки документов -->
+            <div class="upload-section">
+                <h2>📄 Загрузка документов</h2>
+                <div class="upload-area" id="upload-area">
+                    <input type="file" id="file-input" accept=".pdf,.docx" hidden>
+                    <div class="upload-content">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>Перетащите файл сюда или <span class="link">выберите файл</span></p>
+                        <small>Поддерживаются PDF и DOCX файлы (макс. 10MB)</small>
+                    </div>
+                </div>
+                <div id="upload-status" class="upload-status"></div>
+            </div>
+
+            <!-- Чат -->
+            <div class="chat-section">
+                <h2>💬 Чат с ассистентом</h2>
+                <div class="chat-container" id="chat-container">
+                    <div class="welcome-message">
+                        <h3>Добро пожаловать!</h3>
+                        <p>Загрузите документы и задавайте вопросы. Я помогу найти нужную информацию.</p>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <textarea 
+                        id="question-input" 
+                        placeholder="Задайте вопрос..."
+                        rows="1"
+                    ></textarea>
+                    <button id="send-button" class="send-button" disabled>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
