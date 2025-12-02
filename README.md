@@ -228,4 +228,7 @@ curl -fsSL https://raw.githubusercontent.com/AliakseiZiurkalau/rag-agent/main/sc
 
 # Тестирование API
 ./scripts/test_api.sh
+
+# Проверка развертывания
+./scripts/verify_deployment.sh
 ```
