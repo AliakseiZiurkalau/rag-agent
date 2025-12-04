@@ -304,16 +304,19 @@ function addMessage(role, content, sources = null) {
             <div class="message-sources">
                 <strong>📄 Источники:</strong>
                 <ul class="sources-list">
-                    ${sources.map(source => `
+                    ${sources.map((source, index) => `
                         <li>
                             <span class="source-icon">📄</span>
-                            <span class="source-name">${escapeHtml(source.filename)}</span>
-                            ${source.chunk !== undefined ? `<span class="source-chunk">(фрагмент ${source.chunk + 1})</span>` : ''}
+                            <span class="source-name source-link" onclick="openSourceModal(${index})">${escapeHtml(source.filename)}</span>
+                            ${source.chunks ? `<span class="source-chunk">(${source.chunks.length} фрагмент${source.chunks.length > 1 ? 'ов' : ''})</span>` : ''}
                         </li>
                     `).join('')}
                 </ul>
             </div>
         `;
+        
+        // Сохраняем источники для модального окна
+        messageDiv.dataset.sources = JSON.stringify(sources);
     }
     
     messageDiv.innerHTML = html;
@@ -724,3 +727,87 @@ function showXWikiStatus(message, type) {
         }, 10000);
     }
 }
+
+// Модальное окно для источников
+let currentSourceData = null;
+let currentChunkIndex = 0;
+
+function openSourceModal(sourceIndex) {
+    // Находим последнее сообщение ассистента с источниками
+    const messages = document.querySelectorAll('.message.assistant');
+    const lastMessage = messages[messages.length - 1];
+    
+    if (!lastMessage || !lastMessage.dataset.sources) {
+        return;
+    }
+    
+    const sources = JSON.parse(lastMessage.dataset.sources);
+    const source = sources[sourceIndex];
+    
+    if (!source) {
+        return;
+    }
+    
+    currentSourceData = source;
+    currentChunkIndex = 0;
+    
+    // Обновляем модальное окно
+    document.getElementById('modal-source-title').textContent = source.filename;
+    updateModalContent();
+    
+    // Показываем модальное окно
+    document.getElementById('source-modal').classList.add('active');
+    
+    // Закрытие по клику вне окна
+    document.getElementById('source-modal').onclick = function(e) {
+        if (e.target === this) {
+            closeSourceModal();
+        }
+    };
+}
+
+function closeSourceModal() {
+    document.getElementById('source-modal').classList.remove('active');
+    currentSourceData = null;
+    currentChunkIndex = 0;
+}
+
+function navigateChunk(direction) {
+    if (!currentSourceData || !currentSourceData.chunks) {
+        return;
+    }
+    
+    const newIndex = currentChunkIndex + direction;
+    
+    if (newIndex >= 0 && newIndex < currentSourceData.chunks.length) {
+        currentChunkIndex = newIndex;
+        updateModalContent();
+    }
+}
+
+function updateModalContent() {
+    if (!currentSourceData || !currentSourceData.chunks) {
+        return;
+    }
+    
+    const chunks = currentSourceData.chunks;
+    const currentChunk = chunks[currentChunkIndex];
+    
+    // Обновляем контент
+    document.getElementById('modal-source-content').textContent = currentChunk.content;
+    
+    // Обновляем индикатор
+    document.getElementById('chunk-indicator').textContent = 
+        `Фрагмент ${currentChunkIndex + 1} из ${chunks.length}`;
+    
+    // Обновляем кнопки навигации
+    document.getElementById('prev-chunk').disabled = currentChunkIndex === 0;
+    document.getElementById('next-chunk').disabled = currentChunkIndex === chunks.length - 1;
+}
+
+// Закрытие модального окна по Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeSourceModal();
+    }
+});

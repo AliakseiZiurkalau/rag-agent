@@ -39,8 +39,8 @@ class RAGEngine:
             
             context = "\n\n".join(context_docs)
             
-            # Extract unique sources
-            sources = self._extract_sources(metadatas)
+            # Extract unique sources with full context
+            sources = self._extract_sources_with_context(metadatas, context_docs)
             
             # Generate answer using Ollama
             answer = self._generate_answer(question, context)
@@ -78,6 +78,32 @@ class RAGEngine:
                     seen_sources.add(source_name)
         
         return sources
+    
+    def _extract_sources_with_context(self, metadatas: List[Dict], context_docs: List[str]) -> List[Dict]:
+        """Extract sources with full context chunks"""
+        sources_dict = {}
+        
+        for i, (metadata, context) in enumerate(zip(metadatas, context_docs)):
+            if metadata and 'source' in metadata:
+                source_name = metadata['source']
+                
+                if source_name not in sources_dict:
+                    sources_dict[source_name] = {
+                        'filename': source_name,
+                        'file_hash': metadata.get('file_hash', ''),
+                        'chunks': []
+                    }
+                
+                sources_dict[source_name]['chunks'].append({
+                    'chunk_id': metadata.get('chunk', i),
+                    'content': context
+                })
+        
+        # Сортируем чанки по ID
+        for source in sources_dict.values():
+            source['chunks'] = sorted(source['chunks'], key=lambda x: x['chunk_id'])
+        
+        return list(sources_dict.values())
     
     def _generate_answer(self, question: str, context: str) -> str:
         """Generate answer using Ollama"""

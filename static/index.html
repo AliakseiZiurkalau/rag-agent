@@ -186,6 +186,24 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=11"></script>
+    <!-- Модальное окно для просмотра источников -->
+    <div id="source-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-source-title">Источник</h2>
+                <button class="modal-close" onclick="closeSourceModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="chunks-navigation">
+                    <button id="prev-chunk" class="chunk-nav-btn" onclick="navigateChunk(-1)">← Предыдущий</button>
+                    <span id="chunk-indicator">Фрагмент 1 из 1</span>
+                    <button id="next-chunk" class="chunk-nav-btn" onclick="navigateChunk(1)">Следующий →</button>
+                </div>
+                <div id="modal-source-content" class="source-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js?v=12"></script>
 </body>
 </html>
