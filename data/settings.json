@@ -1,0 +1,10 @@
+{
+  "model": "llama3.2:1b",
+  "temperature": 0.4,
+  "num_predict": 80,
+  "num_ctx": 1024,
+  "context_length": 500,
+  "top_k": 10,
+  "top_p": 0.5,
+  "repeat_penalty": 1.1
+}

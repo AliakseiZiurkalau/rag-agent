@@ -12,8 +12,12 @@ class VectorStore:
         """Initialize ChromaDB client"""
         self.client = chromadb.PersistentClient(
             path=str(config.CHROMA_DB_DIR),
-            settings=Settings(anonymized_telemetry=False)
+            settings=Settings(
+                anonymized_telemetry=False,
+                allow_reset=True
+            )
         )
+        # Всегда используем одну и ту же коллекцию
         self.collection = self.client.get_or_create_collection(
             name=config.COLLECTION_NAME
         )
@@ -23,6 +27,9 @@ class VectorStore:
         """Add documents to vector store"""
         import hashlib
         import time
+        
+        # Убедимся, что коллекция существует
+        self._ensure_collection()
         
         # Генерируем уникальные ID на основе хеша контента и timestamp
         ids = []
@@ -41,14 +48,29 @@ class VectorStore:
     
     def search(self, query_embedding: List[float], top_k: int = config.TOP_K_RESULTS) -> Dict:
         """Search for similar documents"""
+        # Убедимся, что коллекция существует
+        self._ensure_collection()
         results = self.collection.query(
             query_embeddings=[query_embedding],
             n_results=top_k
         )
         return results
     
+    def _ensure_collection(self):
+        """Ensure collection exists and is accessible"""
+        try:
+            # Проверяем, что коллекция доступна
+            self.collection.count()
+        except Exception as e:
+            # Если коллекция недоступна, переподключаемся
+            print(f"Collection not accessible, reconnecting: {e}")
+            self.collection = self.client.get_or_create_collection(
+                name=config.COLLECTION_NAME
+            )
+    
     def get_collection_count(self) -> int:
         """Get number of documents in collection"""
+        self._ensure_collection()
         return self.collection.count()
     
     def clear_collection(self):

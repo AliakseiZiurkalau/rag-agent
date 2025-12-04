@@ -1,8 +1,10 @@
-"""Document parsing for PDF and DOC files"""
+"""Document parsing for PDF, DOC, and Excel files"""
 from pathlib import Path
 from typing import List
 import PyPDF2
 import docx
+import openpyxl
+import pandas as pd
 
 
 class DocumentParser:
@@ -31,6 +33,26 @@ class DocumentParser:
         # For legacy .doc files, consider using python-docx2txt or antiword
         raise NotImplementedError("Legacy .doc format requires additional tools")
     
+    @staticmethod
+    def parse_excel(file_path: Path) -> str:
+        """Extract text from Excel file (xlsx, xls)"""
+        try:
+            # Читаем Excel файл
+            df = pd.read_excel(file_path, sheet_name=None)  # Читаем все листы
+            
+            text_parts = []
+            for sheet_name, sheet_df in df.items():
+                text_parts.append(f"=== Лист: {sheet_name} ===\n")
+                
+                # Конвертируем DataFrame в текст
+                # Включаем заголовки столбцов
+                text_parts.append(sheet_df.to_string(index=False))
+                text_parts.append("\n\n")
+            
+            return "\n".join(text_parts)
+        except Exception as e:
+            raise ValueError(f"Error parsing Excel file: {str(e)}")
+    
     def parse_document(self, file_path: Path) -> str:
         """Parse document based on file extension"""
         suffix = file_path.suffix.lower()
@@ -41,6 +63,8 @@ class DocumentParser:
             return self.parse_docx(file_path)
         elif suffix == '.doc':
             return self.parse_doc(file_path)
+        elif suffix in ['.xlsx', '.xls']:
+            return self.parse_excel(file_path)
         else:
             raise ValueError(f"Unsupported file format: {suffix}")
     

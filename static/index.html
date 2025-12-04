@@ -20,51 +20,172 @@
             </div>
         </header>
 
+        <!-- Вкладки -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="xwiki">🌐 XWiki</button>
+            <button class="tab-button" data-tab="documents">📄 Документы</button>
+            <button class="tab-button" data-tab="chat">💬 Чат</button>
+            <button class="tab-button" data-tab="settings">⚙️ Настройки</button>
+        </div>
+
         <div class="main-content">
-            <!-- Панель загрузки документов -->
-            <div class="upload-section">
-                <h2>📄 Загрузка документов</h2>
-                <div class="upload-area" id="upload-area">
-                    <input type="file" id="file-input" accept=".pdf,.docx" hidden>
-                    <div class="upload-content">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                        </svg>
-                        <p>Перетащите файл сюда или <span class="link">выберите файл</span></p>
-                        <small>Поддерживаются PDF и DOCX файлы (макс. 10MB)</small>
+            <!-- Вкладка: XWiki -->
+            <div class="tab-content active" id="xwiki-tab">
+                <div class="xwiki-section">
+                    <h2>Импорт из XWiki</h2>
+                    
+                    <div class="settings-group">
+                        <h3>Настройки подключения</h3>
+                        <div class="form-group">
+                            <label for="xwiki-url">URL XWiki:</label>
+                            <input type="text" id="xwiki-url" class="form-control" placeholder="http://localhost:8080/xwiki">
+                        </div>
+                        <div class="form-group">
+                            <label for="xwiki-username">Имя пользователя (опционально):</label>
+                            <input type="text" id="xwiki-username" class="form-control" placeholder="admin">
+                        </div>
+                        <div class="form-group">
+                            <label for="xwiki-password">Пароль (опционально):</label>
+                            <input type="password" id="xwiki-password" class="form-control" placeholder="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="xwiki-wiki">Wiki:</label>
+                            <input type="text" id="xwiki-wiki" class="form-control" value="xwiki">
+                        </div>
+                        <div class="form-group">
+                            <label for="xwiki-space">Space (опционально, оставьте пустым для всех):</label>
+                            <input type="text" id="xwiki-space" class="form-control" placeholder="Main">
+                        </div>
+                        
+                        <div class="settings-actions">
+                            <button id="test-xwiki-button" class="btn btn-secondary">🔍 Проверить подключение</button>
+                            <button id="import-xwiki-button" class="btn btn-primary">📥 Импортировать страницы</button>
+                        </div>
+                    </div>
+
+                    <div id="xwiki-status" class="settings-status"></div>
+                    
+                    <div id="xwiki-spaces" class="xwiki-spaces" style="display: none;">
+                        <h3>Доступные пространства:</h3>
+                        <ul id="xwiki-spaces-list"></ul>
                     </div>
                 </div>
-                <div id="upload-status" class="upload-status"></div>
             </div>
 
-            <!-- Чат -->
-            <div class="chat-section">
-                <h2>💬 Чат с ассистентом</h2>
-                <div class="chat-container" id="chat-container">
-                    <div class="welcome-message">
-                        <h3>Добро пожаловать!</h3>
-                        <p>Загрузите документы и задавайте вопросы. Я помогу найти нужную информацию.</p>
+            <!-- Вкладка: Документы -->
+            <div class="tab-content" id="documents-tab">
+                <div class="upload-section">
+                    <h2>Загрузка документов</h2>
+                    <div class="upload-area" id="upload-area">
+                        <input type="file" id="file-input" accept=".pdf,.docx,.xlsx,.xls" hidden>
+                        <div class="upload-content">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <p>Перетащите файл сюда или <span class="link">выберите файл</span></p>
+                            <small>Поддерживаются PDF, DOCX и Excel файлы (макс. 10MB)</small>
+                        </div>
+                    </div>
+                    <div id="upload-status" class="upload-status"></div>
+                </div>
+
+                <div class="documents-list-section">
+                    <div class="section-header">
+                        <h2>Загруженные документы</h2>
+                        <button id="clear-docs-button" class="clear-button">🗑️ Очистить все</button>
+                    </div>
+                    <div id="documents-list" class="documents-list">
+                        <p class="empty-message">Документы еще не загружены</p>
                     </div>
                 </div>
-                <div class="input-container">
-                    <textarea 
-                        id="question-input" 
-                        placeholder="Задайте вопрос..."
-                        rows="1"
-                    ></textarea>
-                    <button id="send-button" class="send-button" disabled>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </button>
+            </div>
+
+            <!-- Вкладка: Чат -->
+            <div class="tab-content" id="chat-tab">
+                <div class="chat-section">
+                    <div class="section-header">
+                        <h2>Чат с ассистентом</h2>
+                        <button id="clear-chat-button" class="clear-button">🗑️ Очистить чат</button>
+                    </div>
+                    <div class="chat-container" id="chat-container">
+                        <div class="welcome-message">
+                            <h3>Добро пожаловать!</h3>
+                            <p>Загрузите документы и задавайте вопросы. Я помогу найти нужную информацию.</p>
+                        </div>
+                    </div>
+                    <div class="input-container">
+                        <textarea 
+                            id="question-input" 
+                            placeholder="Задайте вопрос..."
+                            rows="1"
+                        ></textarea>
+                        <button id="send-button" class="send-button" disabled>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка: Настройки -->
+            <div class="tab-content" id="settings-tab">
+                <div class="settings-section">
+                    <h2>Настройки системы</h2>
+                    
+                    <div class="settings-group">
+                        <h3>Модель Ollama</h3>
+                        <div class="form-group">
+                            <label for="model-select">Выбор модели:</label>
+                            <select id="model-select" class="form-control">
+                                <option value="llama3.2:1b">llama3.2:1b (быстрая)</option>
+                                <option value="llama3.2:3b">llama3.2:3b (качественная)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="model-status">Статус модели:</label>
+                            <div id="model-status" class="status-info">Загрузка...</div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Параметры генерации</h3>
+                        <div class="form-group">
+                            <label for="temperature">Temperature: <span id="temperature-value">0.1</span></label>
+                            <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.1" class="slider">
+                            <small>Креативность ответов (0 = детерминированный, 1 = креативный)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="num-predict">Максимум токенов ответа: <span id="num-predict-value">80</span></label>
+                            <input type="range" id="num-predict" min="50" max="500" step="10" value="80" class="slider">
+                            <small>Максимальная длина ответа</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="num-ctx">Размер контекста: <span id="num-ctx-value">512</span></label>
+                            <input type="range" id="num-ctx" min="256" max="4096" step="256" value="512" class="slider">
+                            <small>Размер контекстного окна</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="context-length">Длина контекста документа: <span id="context-length-value">300</span></label>
+                            <input type="range" id="context-length" min="100" max="1000" step="50" value="300" class="slider">
+                            <small>Количество символов из документов для контекста</small>
+                        </div>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button id="save-settings-button" class="btn btn-primary">💾 Сохранить настройки</button>
+                        <button id="reset-settings-button" class="btn btn-secondary">🔄 Сбросить</button>
+                    </div>
+
+                    <div id="settings-status" class="settings-status"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=11"></script>
 </body>
 </html>
