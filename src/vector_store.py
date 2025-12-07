@@ -80,3 +80,23 @@ class VectorStore:
             name=config.COLLECTION_NAME
         )
         print("Collection cleared")
+    
+    def delete_document_by_hash(self, file_hash: str) -> int:
+        """Delete all chunks of a document by file_hash"""
+        self._ensure_collection()
+        
+        # Получаем все документы с данным file_hash
+        results = self.collection.get(
+            where={"file_hash": file_hash}
+        )
+        
+        if not results or not results.get('ids'):
+            return 0
+        
+        # Удаляем все найденные чанки
+        ids_to_delete = results['ids']
+        self.collection.delete(ids=ids_to_delete)
+        
+        deleted_count = len(ids_to_delete)
+        print(f"Deleted {deleted_count} chunks for file_hash: {file_hash}")
+        return deleted_count

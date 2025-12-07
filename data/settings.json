@@ -1,10 +1,17 @@
 {
-  "model": "llama3.2:1b",
-  "temperature": 0.5,
-  "num_predict": 300,
-  "num_ctx": 4096,
-  "context_length": 1000,
+  "model": "phi3:mini",
+  "temperature": 0.4,
+  "num_predict": 150,
+  "num_ctx": 2048,
+  "context_length": 300,
   "top_k": 10,
   "top_p": 0.5,
-  "repeat_penalty": 1.1
+  "repeat_penalty": 1.1,
+  "api_model_config": {
+    "api_type": "openai",
+    "api_key": "test",
+    "api_url": null,
+    "model_name": "gpt-4"
+  },
+  "use_api_model": false
 }

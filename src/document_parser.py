@@ -14,11 +14,24 @@ class DocumentParser:
     def parse_pdf(file_path: Path) -> str:
         """Extract text from PDF file"""
         text = []
-        with open(file_path, 'rb') as file:
-            pdf_reader = PyPDF2.PdfReader(file)
-            for page in pdf_reader.pages:
-                text.append(page.extract_text())
-        return "\n".join(text)
+        try:
+            with open(file_path, 'rb') as file:
+                pdf_reader = PyPDF2.PdfReader(file)
+                for page_num, page in enumerate(pdf_reader.pages):
+                    try:
+                        page_text = page.extract_text()
+                        if page_text:
+                            text.append(page_text)
+                    except Exception as e:
+                        print(f"Warning: Could not extract text from page {page_num}: {e}")
+                        continue
+            
+            result = "\n".join(text)
+            if not result.strip():
+                raise ValueError("PDF contains no extractable text. The file might be image-based (scanned document) or password-protected. Please use a text-based PDF or convert scanned documents using OCR.")
+            return result
+        except Exception as e:
+            raise ValueError(f"Error parsing PDF: {str(e)}")
     
     @staticmethod
     def parse_docx(file_path: Path) -> str:
