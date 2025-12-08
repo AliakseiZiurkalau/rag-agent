@@ -242,14 +242,23 @@ async def get_stats():
             documents_count = len(unique_files)
             websites_count = len(unique_sites)
         
+        # Получаем текущую модель из настроек
+        current_model = settings_manager.get('model', config.OLLAMA_MODEL)
+        
+        # Если используется API модель, показываем её
+        if settings_manager.get('use_api_model', False):
+            api_config = settings_manager.get('api_model_config')
+            if api_config:
+                current_model = f"{api_config.get('api_type', 'API')}: {api_config.get('model_name', 'Unknown')}"
+        
         return {
             "documents_count": documents_count,
             "websites_count": websites_count,
             "chunks_count": chunks_count,
-            "model": config.OLLAMA_MODEL,
+            "model": current_model,
             "embedding_model": config.EMBEDDING_MODEL,
             "chunk_size": config.CHUNK_SIZE,
-            "top_k_results": config.TOP_K_RESULTS,
+            "top_k_results": settings_manager.get('context_length', config.TOP_K_RESULTS),
             "cache_enabled": config.ENABLE_CACHE,
             "cache_size": cache_manager.size() if config.ENABLE_CACHE else 0
         }
@@ -965,9 +974,11 @@ async def start_telegram_bot_endpoint(config: TelegramBotConfig):
         # Проверяем, не запущен ли уже бот
         existing_bot = get_bot_instance()
         if existing_bot and existing_bot.is_running:
+            status = await existing_bot.get_status()
             return {
                 "status": "already_running",
-                "message": "Telegram бот уже запущен"
+                "message": "Telegram бот уже запущен",
+                **status
             }
         
         logger.info("Starting Telegram bot...")
@@ -975,10 +986,13 @@ async def start_telegram_bot_endpoint(config: TelegramBotConfig):
         # Запускаем бота в фоновом режиме
         bot = await start_telegram_bot(config.bot_token, settings_manager)
         
+        # Получаем статус с username
+        status = await bot.get_status()
+        
         return {
             "status": "success",
             "message": "Telegram бот успешно запущен",
-            "is_running": bot.is_running
+            **status
         }
     
     except Exception as e:
@@ -1020,10 +1034,7 @@ async def get_telegram_bot_status():
         
         bot = get_bot_instance()
         if bot:
-            return {
-                "is_running": bot.is_running,
-                "token_configured": bot.token_configured
-            }
+            return await bot.get_status()
         else:
             return {
                 "is_running": False,

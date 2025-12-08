@@ -9,6 +9,7 @@ const XWikiTab = lazy(() => import('./components/tabs/XWikiTab'))
 const WebTab = lazy(() => import('./components/tabs/WebTab'))
 const DocumentsTab = lazy(() => import('./components/tabs/DocumentsTab'))
 const ChatTab = lazy(() => import('./components/tabs/ChatTab'))
+const MultiChatTab = lazy(() => import('./components/tabs/MultiChatTab'))
 const SettingsTab = lazy(() => import('./components/tabs/SettingsTab'))
 const TelegramTab = lazy(() => import('./components/tabs/TelegramTab'))
 
@@ -41,7 +42,7 @@ function AppContent() {
             {activeTab === 'xwiki' && <XWikiTab />}
             {activeTab === 'web' && <WebTab />}
             {activeTab === 'documents' && <DocumentsTab />}
-            {activeTab === 'chat' && <ChatTab />}
+            {activeTab === 'chat' && <MultiChatTab />}
             {activeTab === 'telegram' && <TelegramTab />}
             {activeTab === 'settings' && <SettingsTab />}
           </Suspense>

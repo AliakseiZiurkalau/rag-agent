@@ -330,28 +330,42 @@ kill -9 <PID>
 ```
 Invalid token
 Connection error
-Bot not responding
+AttributeError: 'Updater' object has no attribute...
 ```
 
 **Решение:**
 
-**Проверка токена:**
+**Проблема 1: Несовместимость с Python 3.13**
+```bash
+# Обновить библиотеки
+pip install --upgrade python-telegram-bot ollama
+
+# Должно быть:
+# python-telegram-bot >= 22.5
+# ollama >= 0.6.1
+
+# Перезапустить backend
+./stop.sh && ./start.sh
+```
+
+**Проблема 2: Неправильный токен**
 ```bash
 # Формат: 1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
 # Получите новый у @BotFather если нужно
 ```
 
-**Проверка интернета:**
+**Проблема 3: Нет интернета**
 ```bash
 ping telegram.org
+curl https://api.telegram.org
 ```
 
-**Проверка backend:**
+**Проблема 4: Backend не запущен**
 ```bash
 curl http://localhost:8000/health
 ```
 
-**Перезапуск:**
+**Перезапуск бота:**
 1. Settings → Telegram Bot
 2. Нажмите "Остановить бота"
 3. Подождите 5 секунд

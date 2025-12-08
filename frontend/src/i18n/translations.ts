@@ -63,9 +63,13 @@ export interface Translations {
   // Chat Tab
   chatTitle: string
   chatClear: string
+  chatClearConfirm: string
   chatWelcome: string
   chatWelcomeText: string
+  chatWelcomeDesc: string
   chatAskQuestion: string
+  chatPlaceholder: string
+  chatSend: string
   chatSources: string
   chatProcessing: string
   chatFragment: string
@@ -202,9 +206,13 @@ export const translations: Record<Language, Translations> = {
     // Chat Tab
     chatTitle: 'Chat with Assistant',
     chatClear: 'Clear Chat',
-    chatWelcome: 'Welcome!',
+    chatClearConfirm: 'Clear chat history?',
+    chatWelcome: 'Start a new conversation',
     chatWelcomeText: 'Upload documents and ask questions. I will help you find the information you need.',
+    chatWelcomeDesc: 'Ask a question about uploaded documents, and I will find the answer in the knowledge base',
     chatAskQuestion: 'Ask a question...',
+    chatPlaceholder: 'Ask a question...',
+    chatSend: 'Send',
     chatSources: 'Sources:',
     chatProcessing: 'Processing request... This may take up to 3 minutes',
     chatFragment: 'Fragment',
@@ -339,10 +347,14 @@ export const translations: Record<Language, Translations> = {
     
     // Chat Tab
     chatTitle: 'Чат с ассистентом',
-    chatClear: 'Очистить чат',
-    chatWelcome: 'Добро пожаловать!',
+    chatClear: 'Очистить',
+    chatClearConfirm: 'Очистить историю чата?',
+    chatWelcome: 'Начните новый диалог',
     chatWelcomeText: 'Загрузите документы и задавайте вопросы. Я помогу найти нужную информацию.',
+    chatWelcomeDesc: 'Задайте вопрос по загруженным документам, и я найду ответ в базе знаний',
     chatAskQuestion: 'Задайте вопрос...',
+    chatPlaceholder: 'Задайте вопрос...',
+    chatSend: 'Отправить',
     chatSources: 'Источники:',
     chatProcessing: 'Обработка запроса... Это может занять до 3 минут',
     chatFragment: 'Фрагмент',
@@ -477,10 +489,14 @@ export const translations: Record<Language, Translations> = {
     
     // Chat Tab
     chatTitle: 'Czat z asystentem',
-    chatClear: 'Wyczyść czat',
-    chatWelcome: 'Witaj!',
+    chatClear: 'Wyczyść',
+    chatClearConfirm: 'Wyczyścić historię czatu?',
+    chatWelcome: 'Rozpocznij nową rozmowę',
     chatWelcomeText: 'Prześlij dokumenty i zadawaj pytania. Pomogę Ci znaleźć potrzebne informacje.',
+    chatWelcomeDesc: 'Zadaj pytanie o przesłane dokumenty, a znajdę odpowiedź w bazie wiedzy',
     chatAskQuestion: 'Zadaj pytanie...',
+    chatPlaceholder: 'Zadaj pytanie...',
+    chatSend: 'Wyślij',
     chatSources: 'Źródła:',
     chatProcessing: 'Przetwarzanie zapytania... Może to potrwać do 3 minut',
     chatFragment: 'Fragment',

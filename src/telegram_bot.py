@@ -163,13 +163,18 @@ class TelegramBot:
             self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
             self.application.add_error_handler(self.error_handler)
             
-            # Запускаем бота
+            # Запускаем бота (новый API в версии 20.x)
             await self.application.initialize()
             await self.application.start()
-            await self.application.updater.start_polling()
+            
+            # Запускаем polling в фоновом режиме
+            asyncio.create_task(self.application.updater.start_polling(drop_pending_updates=True))
             
             self.is_running = True
-            logger.info("Telegram bot started successfully")
+            
+            # Получаем информацию о боте
+            bot_info = await self.application.bot.get_me()
+            logger.info(f"Telegram bot started successfully: @{bot_info.username}")
             
         except Exception as e:
             logger.error(f"Error starting Telegram bot: {e}", exc_info=True)
@@ -182,7 +187,11 @@ class TelegramBot:
             if self.application and self.is_running:
                 logger.info("Stopping Telegram bot...")
                 
-                await self.application.updater.stop()
+                # Останавливаем polling
+                if self.application.updater and self.application.updater.running:
+                    await self.application.updater.stop()
+                
+                # Останавливаем приложение
                 await self.application.stop()
                 await self.application.shutdown()
                 
@@ -192,12 +201,22 @@ class TelegramBot:
         except Exception as e:
             logger.error(f"Error stopping Telegram bot: {e}", exc_info=True)
     
-    def get_status(self) -> dict:
+    async def get_status(self) -> dict:
         """Получить статус бота"""
-        return {
+        status = {
             "is_running": self.is_running,
             "token_configured": bool(self.token)
         }
+        
+        # Добавляем username если бот запущен
+        if self.is_running and self.application:
+            try:
+                bot_info = await self.application.bot.get_me()
+                status["bot_username"] = bot_info.username
+            except Exception as e:
+                logger.error(f"Error getting bot info: {e}")
+        
+        return status
 
 
 # Глобальный экземпляр бота
